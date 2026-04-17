@@ -1,21 +1,26 @@
-use macroquad::{miniquad::window::set_window_size, prelude::*};
+use macroquad::{miniquad::window::set_window_size, prelude::*, rand::ChooseRandom};
+
+#[derive(Clone, Copy)]
+enum Side{
+    Left,
+    Right
+}
+
+
+const WIDTH: i32 = 200;
+const HEIGHT: i32 = 200;
 
 
 
-
-
-
-const WIDTH: i32 = 400;
-const HEIGHT: i32 = 400;
-
-
-#[macroquad::main("MyGame")]
+#[macroquad::main("Sand_Sim")]
 async fn main() {
 
+    
     let mut screen_map: Vec<Vec<u8>> = vec![vec![0; WIDTH as usize]; HEIGHT as usize];
 
 
     set_window_size(WIDTH as u32, HEIGHT as u32);
+    
     
 
     loop {
@@ -52,16 +57,37 @@ async fn main() {
                             new_map[index_y as usize][index_x as usize] = 0;
                             new_map[(index_y+1) as usize][index_x as usize] = 1;
                         }else{
-                            //diagonall movement
-                            if index_x - 1 >= 0{
+                            //diagonal movement
+                            if (index_x - 1 >= 0) && (index_x + 1 < WIDTH){
+                                let first_side = [Side::Left, Side::Right].choose().copied();
+                                match first_side {
+                                    Some(Side::Left) =>{
+                                        if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            new_map[index_y as usize][index_x as usize] = 0;
+                                            new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                        }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            new_map[index_y as usize][index_x as usize] = 0;
+                                            new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                        }
+                                    }
+                                    Some(Side::Right) =>{
+                                        if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            new_map[index_y as usize][index_x as usize] = 0;
+                                            new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                        }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            new_map[index_y as usize][index_x as usize] = 0;
+                                            new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                        } 
+                                    }
+                                    None =>{
+
+                                    }
+                                }
+
+                            }else if index_x - 1 >= 0{ 
                                 if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                     new_map[index_y as usize][index_x as usize] = 0;
                                     new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                }else if index_x + 1 < WIDTH{
-                                    if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
-                                        new_map[index_y as usize][index_x as usize] = 0;
-                                        new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
-                                    }
                                 }
                             }else if index_x + 1 < WIDTH{
                                 if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
