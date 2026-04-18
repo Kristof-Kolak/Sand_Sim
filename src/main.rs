@@ -6,11 +6,36 @@ enum Side{
     Right
 }
 
+enum BrushMode{
+    Paint,
+    Clean
+}
 
 const WIDTH: i32 = 1000;
 const HEIGHT: i32 = 1000;
 
-
+fn create_brush(brush_size: i32, screen_map: &mut Vec<Vec<u8>>, mouse_x: i32, mouse_y:i32, brush_mode: BrushMode){
+    match brush_mode {
+        BrushMode::Paint => {
+            for dy in -brush_size..brush_size + 1{
+                for dx in -brush_size..brush_size + 1{
+                    if mouse_x + dx >= 0 && mouse_x + dx < WIDTH && mouse_y + dy >= 0 && mouse_y + dy< HEIGHT{
+                        screen_map[(mouse_y + dy) as usize][(mouse_x + dx) as usize] = 1;
+                    }    
+                }
+            } 
+        }   
+        BrushMode::Clean =>{
+            for dy in -brush_size..brush_size + 1{
+                for dx in -brush_size..brush_size + 1{
+                    if mouse_x + dx >= 0 && mouse_x + dx < WIDTH && mouse_y + dy >= 0 && mouse_y + dy< HEIGHT{
+                        screen_map[(mouse_y + dy) as usize][(mouse_x + dx) as usize] = 0;
+                    }    
+                }
+            } 
+        }
+    }
+}
 
 #[macroquad::main("Sand_Sim")]
 async fn main() {
@@ -18,10 +43,11 @@ async fn main() {
     
     let mut screen_map: Vec<Vec<u8>> = vec![vec![0; WIDTH as usize]; HEIGHT as usize];
 
-
+    let mut brush_size = 0;
+    let sensitivity = 0.005;
+    let mut scroll_acc:f32 =  0.0;
     set_window_size(WIDTH as u32, HEIGHT as u32);
     
-    let mut item_counter = 0;
 
     loop {
 
@@ -31,21 +57,34 @@ async fn main() {
         let (x, y) = mouse_position();
         if is_mouse_button_down(MouseButton::Left){
             if (x < WIDTH as f32 && x >= 0.0) && (y < HEIGHT as f32 && y >= 0.0){
-                if screen_map[y as usize][x as usize] != 1{
-                    screen_map[y as usize][x as usize] = 1;
-                    item_counter +=1;
-                }
+                    create_brush(brush_size, &mut screen_map, x as i32, y as i32, BrushMode::Paint);
+                
             }
         }
         if is_mouse_button_down(MouseButton::Right){
             if (x < WIDTH as f32 && x >= 0.0) && (y < HEIGHT as f32 && y >= 0.0){
-                if screen_map[y as usize][x as usize] == 1{
-                    screen_map[y as usize][x as usize] = 0;
-                    item_counter -=1;
-                }
+                    create_brush(brush_size, &mut screen_map, x as i32, y as i32, BrushMode::Clean);
             }
         }
+        let (_mouse_x, mouse_y) = mouse_wheel();
 
+        scroll_acc += mouse_y * sensitivity;
+
+        if scroll_acc >= 1.0{
+            brush_size += 1;
+            scroll_acc -= 1.0;
+        }
+        if scroll_acc <= -1.0{
+            brush_size -= 1;
+            scroll_acc += 1.0;
+        }
+        
+        if brush_size < 0{
+            brush_size = 0;
+        }else if brush_size > 200{
+            brush_size = 200;
+        }
+        println!("{}", brush_size);
 
         let mut new_map = screen_map.clone(); 
         for index_y in (0..HEIGHT).rev() {
@@ -103,18 +142,13 @@ async fn main() {
             }
         } 
         screen_map = new_map;
-        let mut new_map_counter = 0;
         for (index_y, row) in screen_map.iter().enumerate(){
             for (index_x, _) in row.iter().enumerate(){
                 if screen_map[index_y][index_x] == 1{
-                    new_map_counter += 1;
                     draw_rectangle(index_x as f32, index_y as f32, 1.0, 1.0, YELLOW);
 
                 }
             }
-        }
-        if new_map_counter != item_counter{
-            println!("new_map_counter: {} is not equal item_counter: {}", new_map_counter, item_counter)
         }
         next_frame().await
     }
