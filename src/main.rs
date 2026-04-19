@@ -95,7 +95,7 @@ async fn main() {
                         //bottom line condition
                     }else if screen_map[index_y as usize][index_x as usize] == 1 {
                         if index_y+1 < HEIGHT{                    
-                            if screen_map[(index_y+1) as usize][index_x as usize] == 0 && new_map[(index_y+1) as usize][index_x as usize] == 0{ 
+                            if new_map[(index_y+1) as usize][index_x as usize] == 0{ 
                                 //bottom simple movement
                                 new_map[index_y as usize][index_x as usize] = 0;
                                 new_map[(index_y+1) as usize][index_x as usize] = 1;
@@ -105,19 +105,19 @@ async fn main() {
                                     let first_side = [Side::Left, Side::Right].choose().copied();
                                     match first_side {
                                         Some(Side::Left) =>{
-                                            if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            if  new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                            }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            }else if new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
                                             }
                                         }
                                         Some(Side::Right) =>{
-                                            if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            if  new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
-                                            }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            }else if  new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
                                             } 
@@ -128,12 +128,12 @@ async fn main() {
                                     }
 
                                 }else if index_x - 1 >= 0{ 
-                                    if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                    if new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                         new_map[index_y as usize][index_x as usize] = 0;
                                         new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
                                     }
                                 }else if index_x + 1 < WIDTH{
-                                    if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                    if  new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                         new_map[index_y as usize][index_x as usize] = 0;
                                         new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
                                     }
@@ -148,7 +148,7 @@ async fn main() {
                         //bottom line condition
                     }else if screen_map[index_y as usize][index_x as usize] == 1 {
                         if index_y+1 < HEIGHT{                    
-                            if screen_map[(index_y+1) as usize][index_x as usize] == 0 && new_map[(index_y+1) as usize][index_x as usize] == 0{ 
+                            if  new_map[(index_y+1) as usize][index_x as usize] == 0{ 
                                 //bottom simple movement
                                 new_map[index_y as usize][index_x as usize] = 0;
                                 new_map[(index_y+1) as usize][index_x as usize] = 1;
@@ -158,19 +158,19 @@ async fn main() {
                                     let first_side = [Side::Left, Side::Right].choose().copied();
                                     match first_side {
                                         Some(Side::Left) =>{
-                                            if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            if  new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                            }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            }else if  new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
                                             }
                                         }
                                         Some(Side::Right) =>{
-                                            if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                            if  new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
-                                            }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                            }else if  new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                                 new_map[index_y as usize][index_x as usize] = 0;
                                                 new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
                                             } 
@@ -181,12 +181,12 @@ async fn main() {
                                     }
 
                                 }else if index_x - 1 >= 0{ 
-                                    if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                    if new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
                                         new_map[index_y as usize][index_x as usize] = 0;
                                         new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
                                     }
                                 }else if index_x + 1 < WIDTH{
-                                    if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                    if  new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
                                         new_map[index_y as usize][index_x as usize] = 0;
                                         new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
                                     }
