@@ -44,10 +44,10 @@ async fn main() {
     let mut screen_map: Vec<Vec<u8>> = vec![vec![0; WIDTH as usize]; HEIGHT as usize];
 
     let mut brush_size = 0;
-    let sensitivity = 0.005;
+    let sensitivity = 0.01;
     let mut scroll_acc:f32 =  0.0;
     set_window_size(WIDTH as u32, HEIGHT as u32);
-    
+    let mut left_to_right = true; 
 
     loop {
 
@@ -84,63 +84,127 @@ async fn main() {
         }else if brush_size > 200{
             brush_size = 200;
         }
-        println!("{}", brush_size);
+
+
 
         let mut new_map = screen_map.clone(); 
         for index_y in (0..HEIGHT).rev() {
-            for index_x in 0..WIDTH{
-                if index_y == HEIGHT-1{
-                    //bottom line condition
-                }else if screen_map[index_y as usize][index_x as usize] == 1 {
-                    if index_y+1 < HEIGHT{                    
-                        if screen_map[(index_y+1) as usize][index_x as usize] == 0 && new_map[(index_y+1) as usize][index_x as usize] == 0{ 
-                            //bottom simple movement
-                            new_map[index_y as usize][index_x as usize] = 0;
-                            new_map[(index_y+1) as usize][index_x as usize] = 1;
-                        }else{
-                            //diagonal movement
-                            if (index_x - 1 >= 0) && (index_x + 1 < WIDTH){
-                                let first_side = [Side::Left, Side::Right].choose().copied();
-                                match first_side {
-                                    Some(Side::Left) =>{
-                                        if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
-                                            new_map[index_y as usize][index_x as usize] = 0;
-                                            new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                        }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
-                                            new_map[index_y as usize][index_x as usize] = 0;
-                                            new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+            if left_to_right == true{
+                for index_x in 0..WIDTH{
+                    if index_y == HEIGHT-1{
+                        //bottom line condition
+                    }else if screen_map[index_y as usize][index_x as usize] == 1 {
+                        if index_y+1 < HEIGHT{                    
+                            if screen_map[(index_y+1) as usize][index_x as usize] == 0 && new_map[(index_y+1) as usize][index_x as usize] == 0{ 
+                                //bottom simple movement
+                                new_map[index_y as usize][index_x as usize] = 0;
+                                new_map[(index_y+1) as usize][index_x as usize] = 1;
+                            }else{
+                                //diagonal movement
+                                if (index_x - 1 >= 0) && (index_x + 1 < WIDTH){
+                                    let first_side = [Side::Left, Side::Right].choose().copied();
+                                    match first_side {
+                                        Some(Side::Left) =>{
+                                            if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                            }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                            }
+                                        }
+                                        Some(Side::Right) =>{
+                                            if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                            }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                            } 
+                                        }
+                                        None =>{
+
                                         }
                                     }
-                                    Some(Side::Right) =>{
-                                        if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
-                                            new_map[index_y as usize][index_x as usize] = 0;
-                                            new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
-                                        }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
-                                            new_map[index_y as usize][index_x as usize] = 0;
-                                            new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                        } 
-                                    }
-                                    None =>{
 
+                                }else if index_x - 1 >= 0{ 
+                                    if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                        new_map[index_y as usize][index_x as usize] = 0;
+                                        new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
                                     }
-                                }
-
-                            }else if index_x - 1 >= 0{ 
-                                if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
-                                    new_map[index_y as usize][index_x as usize] = 0;
-                                    new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
-                                }
-                            }else if index_x + 1 < WIDTH{
-                                if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
-                                    new_map[index_y as usize][index_x as usize] = 0;
-                                    new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                }else if index_x + 1 < WIDTH{
+                                    if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                        new_map[index_y as usize][index_x as usize] = 0;
+                                        new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        } 
+            }else if left_to_right==false{
+                for index_x in (0..WIDTH).rev(){
+                    if index_y == HEIGHT-1{
+                        //bottom line condition
+                    }else if screen_map[index_y as usize][index_x as usize] == 1 {
+                        if index_y+1 < HEIGHT{                    
+                            if screen_map[(index_y+1) as usize][index_x as usize] == 0 && new_map[(index_y+1) as usize][index_x as usize] == 0{ 
+                                //bottom simple movement
+                                new_map[index_y as usize][index_x as usize] = 0;
+                                new_map[(index_y+1) as usize][index_x as usize] = 1;
+                            }else{
+                                //diagonal movement
+                                if (index_x - 1 >= 0) && (index_x + 1 < WIDTH){
+                                    let first_side = [Side::Left, Side::Right].choose().copied();
+                                    match first_side {
+                                        Some(Side::Left) =>{
+                                            if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                            }else if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                            }
+                                        }
+                                        Some(Side::Right) =>{
+                                            if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                            }else if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                                new_map[index_y as usize][index_x as usize] = 0;
+                                                new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                            } 
+                                        }
+                                        None =>{
+
+                                        }
+                                    }
+
+                                }else if index_x - 1 >= 0{ 
+                                    if screen_map[(index_y+1) as usize][(index_x-1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x-1) as usize] == 0{
+                                        new_map[index_y as usize][index_x as usize] = 0;
+                                        new_map[(index_y+1) as usize][(index_x-1) as usize] = 1;
+                                    }
+                                }else if index_x + 1 < WIDTH{
+                                    if screen_map[(index_y+1) as usize][(index_x+1) as usize] == 0 && new_map[(index_y+1) as usize][(index_x+1) as usize] == 0{
+                                        new_map[index_y as usize][index_x as usize] = 0;
+                                        new_map[(index_y+1) as usize][(index_x+1) as usize] = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+        }
+        
+
+        if left_to_right == true{
+            left_to_right = false;
+        }else{
+            left_to_right = true;
+        }
+
         screen_map = new_map;
         for (index_y, row) in screen_map.iter().enumerate(){
             for (index_x, _) in row.iter().enumerate(){
